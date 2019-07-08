@@ -1,5 +1,5 @@
-# Don't track contents of these photos
+# Don't track contents of these files
 node_modules/
 .DS_Store
 .env
-package-lock.json
+
