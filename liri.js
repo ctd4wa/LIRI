@@ -8,12 +8,22 @@ var axios = require("axios");
 var moment = require("moment");
 // for read & write
 var fs = require("fs");
-var query = process.argv[3];
+
+var nodeArgs = process.argv;
+var query = "";
 
 // Check Keys
 // console.log(keys);
 var option = process.argv[2];
 // console.log(option);
+
+for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3 && i < nodeArgs.length) {
+        query = query + "+" + nodeArgs[i];
+    } else {
+        query += nodeArgs[i];
+    }
+}
 
 
 // Initialize Spotify client
@@ -78,6 +88,7 @@ function movieThis(movieName) {
                 "\nTitle: " + response.data.Title + 
                 "\nRelease Year: " + response.data.Year + 
                 "\nRating: " + response.data.Rated + 
+                "\nIMDBRating: " + response.data.imdbRating +
                 "\nRelease Country: " + response.data.Country + 
                 "\nLanguage: " + response.data.Language + 
                 "\nPlot: " + response.data.Plot + 
