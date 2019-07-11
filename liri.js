@@ -1,135 +1,91 @@
+
+// Define dependent variables so they're global
 require("dotenv").config();
+// NPM Packages & API keys
 var keys = require("./keys.js");
-// Terminal Colors
-
-// Calls to BandsInTown and OMDB
-var request = require('request');
-// Date Formatting
-var moment = require('moment');
-// Spotify
 var Spotify = require('node-spotify-api');
+var axios = require("axios");
+var moment = require("moment");
+// for read & write
+var fs = require("fs");
+var query = process.argv[3];
+
+// Check Keys
+// console.log(keys);
+var option = process.argv[2];
+// console.log(option);
+
+
+// Initialize Spotify client
 var spotify = new Spotify(keys.spotify);
+switch (option) {
+    case "movie-this":
+        movieThis(query);
+        break;
+    case "spotify-this-song":
+        spotifyCall(query);
+        break;
+    case "concert-this":
+        concertThis(query);
+        break;
+    default:
+        // 1- read file
+        fs.readFile("random.txt", "utf8", function (error, data) {
+            // 2-retrieve content & parse string
+            var data = data.split(",");
+            var thatWay = data[1];
+            if (error) {
+                return console.log(error);
+            }
+            // 3-call function 
+            spotifyCall(thatWay);
+        })
 
-var fs = require('fs');
-
-var command = process.argv[2];
-var media_array = process.argv.slice(3);
-var media = media_array.join(" ");
-
-function doThings(command, media) {
-    switch (command) {
-
-        case 'spotify-this-song':
-            spotifyThis(media); break;
-        case 'movie-this':
-            movieThis(media); break;
-        case 'concert-this':
-            concertThis(media); break;
-        case 'do-what-it-says':
-            doWhatItSays(); break;
-        default:
-            console.log("Invalid command. Please type any of the following commands:");
-            console.log("concert-this", "spotify-this-song", "movie-this", "do-what-it-says");
-    }
 }
 
-function spotifyThis(media) {
-    // Default value
-    if (media == "") {
-        media = "All Star"
+// FUNCTIONS
+// SPOTIFY-THIS-SONG
+function spotifyCall(songName) {
+    spotify.search({ type: 'track', query: songName }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        console.log("\n_Track Info_" + "\nArtist: " + data.tracks.items[0].artists[0].name + "\nSong: " + data.tracks.items[0].name + "\nLink: " + data.tracks.items[0].external_urls.spotify + "\nAlbum: " + data.tracks.items[0].album.name + "\n" + "\nGreat song! Search another :)")
+    });
+}
+
+// MOVIE-THIS
+// Then run a request with axios to the OMDB API with the movie specified
+function movieThis(movieName) {
+    if (!movieName) {
+        movieName = "Mr. Nobody";
     }
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    // // This line is just to help us debug against the actual URL.
+    // Creating a request with axios to the queryUrl
+    axios.get(queryUrl).then(
+        function (response) {
+            if (!movieName) {
+                movieName = "Mr. Nobody";
+            }// console.log(response.data);
+            // Data of Movie
+            console.log("\n_Movie Info_" + "\nTitle: " + response.data.Title + "\nRelease Year: " + response.data.Year + "\nRating: " + response.data.Rated + "\nRelease Country: " + response.data.Country + "\nLanguage: " + response.data.Language + "\nPlot: " + response.data.Plot + "\nActors: " + response.data.Actors + "\n" + "\n Love this one!");
 
-    // Search spotify API
-    spotify
-        .search({ type: 'track', query: media, limit: 1 })
-        .then(function (response) {
-            var song = response.tracks.items[0];
-            if (song != undefined) {
-                console.log("Song Name: " + song.name);
 
-                console.log("Artist: ");
-                for (i = 0; i < song.artists.length; i++) {
-                    console.log(song.artists[i].name);
-                }
+        }
+    );
+}
 
-                console.log("Spotify URL: " + song.preview_url);
 
-                console.log("Album: " + song.album.name);
-            } else {
-                console.log("Can't find this song!")
-            }
-        })
-        .catch(function (err) {
-            console.log(err);
+// CONCERT-THIS
+// Then run a request with axios to the BiT API with the artist specified
+function concertThis(artist) {
+    var bandsQueryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+    // // This line is just to help us debug against the actual URL.
+    // Creating a request with axios to the queryUrl
+    axios.get(bandsQueryUrl).then(
+        function (response) {
+            console.log("_Upcoming Events_");
+            console.log("Artist: " + artist + "\nVenue: " + response.data[0].venue.name + "\nLocation: " + response.data[0].venue.country + "\nDate: " + response.data[0].datatime + "\nRock on dude!");
         });
 }
-
-function concertThis(media) {
-    // Default value
-    if (media == "") {
-        media = "Brockhampton"
-    }
-    request("https://rest.bandsintown.com/artists/" + media + "/events?app_id=codingbootcamp", function (error, response, data) {
-        try {
-            var response = JSON.parse(data)
-            if (response.length != 0) {
-                console.log("Upcoming concerts for " + media)
-                response.forEach(function (element) {
-                    console.log("Venue name: " + element.venue.name);
-                    if (element.venue.country == "United States") {
-                        console.log("City: " + element.venue.city + ", " + element.venue.region);
-                    } else {
-                        console.log("City: " + element.venue.city + ", " + element.venue.country);
-                    }
-                    console.log("Date: " + moment(element.datetime).format('MM/DD/YYYY'));
-                    console.log();
-                })
-            } else {
-                console.log("No concerts found.");
-            }
-        }
-        catch (error) {
-            console.log("No concerts found.");
-        }
-    });
-}
-
-function movieThis(media) {
-    // Default value
-    if (media == "") {
-        media = "Mr. Nobody"
-    }
-    request("http://www.omdbapi.com/?apikey=trilogy&t=" + media, function (error, response, data) {
-        try {
-            var response = JSON.parse(data)
-            if (response.Title != undefined) {
-                console.log("Movie: " + response.Title);
-                console.log("Year: " + response.Year);
-                console.log("IMDB Rating: " + response.imdbRating);
-                console.log("Rotten Tomatoes: " + response.Ratings[2])
-                console.log("Country: " + response.Country);
-                console.log("Language: " + response.Language);
-                console.log("Plot: " + response.Plot);
-                console.log("Actors: " + response.Actors);
-                console.log();
-            } else {
-                console.log(chalk.red("This movie not found."));
-            }
-        }
-        catch (error) {
-            console.log(chalk.red("This movie not found."));
-        }
-    });
-}
-
-function doWhatItSays() {
-    fs.readFile("random.txt", "utf8", function (err, response) {
-        if (err) {
-            console.log(err);
-        }
-        let params = (response.split(','));
-        doThings(params[0], params[1]);
-    })
-}
-
-doThings(command, media);
