@@ -50,7 +50,11 @@ function spotifyCall(songName) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log("\n_Track Info_" + "\nArtist: " + data.tracks.items[0].artists[0].name + "\nSong: " + data.tracks.items[0].name + "\nLink: " + data.tracks.items[0].external_urls.spotify + "\nAlbum: " + data.tracks.items[0].album.name + "\n" + "\nGreat song! Search another :)")
+        console.log("\n_Track Info_" + 
+        "\nArtist: " + data.tracks.items[0].artists[0].name + 
+        "\nSong: " + data.tracks.items[0].name + 
+        "\nLink: " + data.tracks.items[0].external_urls.spotify + 
+        "\nAlbum: " + data.tracks.items[0].album.name);
     });
 }
 
@@ -69,9 +73,15 @@ function movieThis(movieName) {
                 movieName = "Mr. Nobody";
             }// console.log(response.data);
             // Data of Movie
-            console.log("\n_Movie Info_" + "\nTitle: " + response.data.Title + "\nRelease Year: " + response.data.Year + "\nRating: " + response.data.Rated + "\nRelease Country: " + response.data.Country + "\nLanguage: " + response.data.Language + "\nPlot: " + response.data.Plot + "\nActors: " + response.data.Actors + "\n" + "\n Love this one!");
-
-
+            console.log(
+                "\n_Movie Info_" + 
+                "\nTitle: " + response.data.Title + 
+                "\nRelease Year: " + response.data.Year + 
+                "\nRating: " + response.data.Rated + 
+                "\nRelease Country: " + response.data.Country + 
+                "\nLanguage: " + response.data.Language + 
+                "\nPlot: " + response.data.Plot + 
+                "\nActors: " + response.data.Actors );
         }
     );
 }
@@ -85,7 +95,10 @@ function concertThis(artist) {
     // Creating a request with axios to the queryUrl
     axios.get(bandsQueryUrl).then(
         function (response) {
-            console.log("_Upcoming Events_");
-            console.log("Artist: " + artist + "\nVenue: " + response.data[0].venue.name + "\nLocation: " + response.data[0].venue.country + "\nDate: " + response.data[0].datatime + "\nRock on dude!");
+            console.log("Coming Soon..");
+            console.log("Artist: " + artist + 
+            "\nVenue: " + response.data[0].venue.name + 
+            "\nLocation: " + response.data[0].venue.country + 
+            "\nDate: " + moment(response.data[0].datatime).format('MM/DD/YYYY'));
         });
 }
