@@ -20,4 +20,16 @@ node liri.js spotify-this-song Take On Me
 ```
 ![spotify-this-song](https://i.ibb.co/gmLSN0T/Spotify-this-song.jpg)
 
+- The "movie-this" command takes in a movie from the command line and will make the Axios call to return the Release Year, IMDB Rating, country where the movie was produced, the language of the movie, the plot of the movie and its actors.
 
+```bash
+node liri.js movie-this Rush Hour
+```
+![movie-this](https://i.ibb.co/qJYg9Lg/movie-this.jpg)
+
+- And finally, the "do-what-it-says" command utilizes the 'fs.readFile' method in order to read the the text from a .txt and submit that command in order to do whatever it says on the file. This command does not require an additional argument. In this example, it is to search Spotify for the song "I Want It That Way".
+
+```bash
+node liri.js do-what-it-says
+```
+![do-what-it-says](https://i.ibb.co/7XHJZwC/do-what-it-says.jpg)
