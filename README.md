@@ -11,5 +11,4 @@ Through the Command-Line Interface, a user will be able to use 4 different comma
 ```bash
 node liri.js concert-this OneRepublic
 ```
-![Image of Concert-This]
-(https://ibb.co/yRJbdfq)
+![Concert-This](https://ibb.co/yRJbdfq)
