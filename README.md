@@ -33,3 +33,11 @@ node liri.js movie-this Rush Hour
 node liri.js do-what-it-says
 ```
 ![do-what-it-says](https://i.ibb.co/7XHJZwC/do-what-it-says.jpg)
+
+## Technologies Used
+ - Spotify API
+ - Bands In Town API
+ - OMDB API
+ - Node.js
+ - Javascript
+ - NPM Packages
