@@ -1,21 +1,20 @@
 
 // Define dependent variables so they're global
 require("dotenv").config();
-// NPM Packages & API keys
+
 var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var axios = require("axios");
 var moment = require("moment");
-// for read & write
+// to read from random.txt
 var fs = require("fs");
 
 var nodeArgs = process.argv;
 var query = "";
 
-// Check Keys
-// console.log(keys);
+
 var option = process.argv[2];
-// console.log(option);
+
 
 for (var i = 3; i < nodeArgs.length; i++) {
     if (i > 3 && i < nodeArgs.length) {
@@ -25,9 +24,10 @@ for (var i = 3; i < nodeArgs.length; i++) {
     }
 }
 
-
 // Initialize Spotify client
 var spotify = new Spotify(keys.spotify);
+
+
 switch (option) {
     case "movie-this":
         movieThis(query);
@@ -38,22 +38,12 @@ switch (option) {
     case "concert-this":
         concertThis(query);
         break;
-    default:
-        // 1- read file
-        fs.readFile("random.txt", "utf8", function (error, data) {
-            // 2-retrieve content & parse string
-            var data = data.split(",");
-            var thatWay = data[1];
-            if (error) {
-                return console.log(error);
-            }
-            // 3-call function 
-            spotifyCall(thatWay);
-        })
+    case "do-what-it-says":
+        doCommand();
+        break;
 
 }
 
-// FUNCTIONS
 // SPOTIFY-THIS-SONG
 function spotifyCall(songName) {
     spotify.search({ type: 'track', query: songName }, function (err, data) {
@@ -63,26 +53,24 @@ function spotifyCall(songName) {
         console.log("\n_Track Info_" + 
         "\nArtist: " + data.tracks.items[0].artists[0].name + 
         "\nSong: " + data.tracks.items[0].name + 
-        "\nLink: " + data.tracks.items[0].external_urls.spotify + 
+        "\nLink: " + data.tracks.items[0].preview_url + 
         "\nAlbum: " + data.tracks.items[0].album.name);
     });
 }
 
 // MOVIE-THIS
-// Then run a request with axios to the OMDB API with the movie specified
 function movieThis(movieName) {
     if (!movieName) {
         movieName = "Mr. Nobody";
     }
+    // create queryURL variable 
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-    // // This line is just to help us debug against the actual URL.
-    // Creating a request with axios to the queryUrl
+    
     axios.get(queryUrl).then(
         function (response) {
             if (!movieName) {
                 movieName = "Mr. Nobody";
-            }// console.log(response.data);
-            // Data of Movie
+            }
             console.log(
                 "\n_Movie Info_" + 
                 "\nTitle: " + response.data.Title + 
@@ -99,11 +87,11 @@ function movieThis(movieName) {
 
 
 // CONCERT-THIS
-// Then run a request with axios to the BiT API with the artist specified
+
 function concertThis(artist) {
+    // QueryURL to add command input into URL
     var bandsQueryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-    // // This line is just to help us debug against the actual URL.
-    // Creating a request with axios to the queryUrl
+
     axios.get(bandsQueryUrl).then(
         function (response) {
             console.log("Coming Soon..");
@@ -113,3 +101,28 @@ function concertThis(artist) {
             "\nDate: " + moment(response.data[0].datatime).format('MM/DD/YYYY'));
         });
 }
+
+function doCommand() {
+    fs.readFile("random.txt", "UTF8", function(error,data) {
+
+        if (error) {
+            console.log(error);
+        } 
+        console.log(data);
+
+        var dataArr = data.split(",");
+        var command = dataArr[0];
+        var choice = dataArr[1];
+
+        if (command === "spotify-this-song") {
+            query = choice;
+            spotifyCall(query);
+        } else if (command === "movie-this") {
+            query = choice;
+            movieThis(query);
+        } else if (command === "concert-this") {
+            query = choice;
+            concertThis(query);
+        }
+    });
+};
