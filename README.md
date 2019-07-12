@@ -12,3 +12,10 @@ Through the Command-Line Interface, a user will be able to use 4 different comma
 node liri.js concert-this OneRepublic
 ```
 ![Concert-This](https://i.ibb.co/GJjbnxR/concert-this.jpg)
+
+- "spotify-this-song" acts as a command that takes any song name and returns the artist, album and a preview link for the user to see.
+
+```bash
+node liri.js spotify-this-song Counting Stars
+```
+
