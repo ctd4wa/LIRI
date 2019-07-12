@@ -16,6 +16,8 @@ node liri.js concert-this OneRepublic
 - "spotify-this-song" acts as a command that takes any song name and returns the artist, album and a preview link for the user to see.
 
 ```bash
-node liri.js spotify-this-song Counting Stars
+node liri.js spotify-this-song Take On Me
 ```
+![spotify-this-song](https://i.ibb.co/gmLSN0T/Spotify-this-song.jpg)
+
 
