@@ -25,7 +25,7 @@ node liri.js spotify-this-song Take On Me
 ```bash
 node liri.js movie-this Rush Hour
 ```
-![movie-this](https://i.ibb.co/qJYg9Lg/movie-this.jpg)
+![movie-this](https://i.ibb.co/m6WGyVd/movie-this.jpg)
 
 - And finally, the "do-what-it-says" command utilizes the 'fs.readFile' method in order to read the the text from a .txt and submit that command in order to do whatever it says on the file. This command does not require an additional argument. In this example, it is to search Spotify for the song "I Want It That Way".
 
