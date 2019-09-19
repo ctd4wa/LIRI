@@ -32,7 +32,7 @@ node liri.js movie-this Rush Hour
 ```bash
 node liri.js do-what-it-says
 ```
-![do-what-it-says](https://i.ibb.co/bWZyn2Y/do-what-it-says.jpg)
+![do-what-it-says](https://i.ibb.co/8bpSYZV/do-what-it-says.jpg)
 
 ## Technologies Used
  - Spotify API
